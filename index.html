@@ -48,45 +48,44 @@
   </div>
 
   <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyD1k3vMvPt3Rqi8JgAl56DrO82vXn3WbAo",
-    authDomain: "nicrm-1afa3.firebaseapp.com",
-    projectId: "nicrm-1afa3",
-    storageBucket: "nicrm-1afa3.firebasestorage.app",
-    messagingSenderId: "1087524542055",
-    appId: "1:1087524542055:web:c46c43ba9849e3552566c2"
-  };
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyD1k3vMvPt3Rqi8JgAl56DrO82vXn3WbAo",
+      authDomain: "nicrm-1afa3.firebaseapp.com",
+      projectId: "nicrm-1afa3",
+      storageBucket: "nicrm-1afa3.firebasestorage.app",
+      messagingSenderId: "1087524542055",
+      appId: "1:1087524542055:web:c46c43ba9849e3552566c2"
+    };
 
- // Initialize Firebase + Firestore
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+    // Initialize Firebase + Firestore
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-  // Form submit handler
-  document.getElementById("leadForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+    // Form submit handler
+    document.getElementById("leadForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    try {
-      const docRef = await addDoc(collection(db, "Leads"), {
-        name: document.getElementById("name").value,
-        mobile: document.getElementById("mobile").value,
-        address: document.getElementById("address").value,
-        date: document.getElementById("date").value,
-        notes: document.getElementById("notes").value,
-        createdAt: new Date()
-      });
-      alert("✅ Lead Saved Successfully! ID: " + docRef.id);
-      document.getElementById("leadForm").reset();
-    } catch (error) {
-      alert("❌ Error: " + error);
-    }
-  });
-</script>
+      try {
+        const docRef = await addDoc(collection(db, "Leads"), {
+          name: document.getElementById("name").value,
+          mobile: document.getElementById("mobile").value,
+          address: document.getElementById("address").value,
+          date: document.getElementById("date").value,
+          notes: document.getElementById("notes").value,
+          createdAt: new Date()
+        });
+        alert("✅ Lead Saved Successfully! ID: " + docRef.id);
+        document.getElementById("leadForm").reset();
+      } catch (error) {
+        alert("❌ Error: " + error);
+      }
+    });
+  </script>
   
 </body>
 </html>
