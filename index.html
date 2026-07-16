@@ -46,12 +46,11 @@
       <button type="submit" class="btn btn-primary">Save Lead</button>
     </form>
   </div>
-  <div id="leadList" class="mt-4"></div>
+<div id="leadList" class="mt-4"></div>
 
-
-  <script type="module">
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD1k3vMvPt3Rqi8JgAl56DrO82vXn3WbAo",
@@ -68,18 +67,36 @@
   // Save Lead
   document.getElementById("leadForm").addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    const form = e.target;
+    const editId = form.getAttribute("data-edit-id"); // check edit mode
+
     try {
-      await addDoc(collection(db, "Leads"), {
-        name: document.getElementById("name").value,
-        mobile: document.getElementById("mobile").value,
-        address: document.getElementById("address").value,
-        date: document.getElementById("date").value,
-        notes: document.getElementById("notes").value,
-        createdAt: new Date()
-      });
-      alert("✅ Lead Saved Successfully!");
-      document.getElementById("leadForm").reset();
-      loadLeads(); // refresh list after save
+      if (editId) {
+        // Update existing lead
+        await updateDoc(doc(db, "Leads", editId), {
+          name: document.getElementById("name").value,
+          mobile: document.getElementById("mobile").value,
+          address: document.getElementById("address").value,
+          date: document.getElementById("date").value,
+          notes: document.getElementById("notes").value
+        });
+        alert("✏️ Lead Updated Successfully!");
+        form.removeAttribute("data-edit-id");
+      } else {
+        // Add new lead
+        await addDoc(collection(db, "Leads"), {
+          name: document.getElementById("name").value,
+          mobile: document.getElementById("mobile").value,
+          address: document.getElementById("address").value,
+          date: document.getElementById("date").value,
+          notes: document.getElementById("notes").value,
+          createdAt: new Date()
+        });
+        alert("✅ Lead Saved Successfully!");
+      }
+      form.reset();
+      loadLeads();
     } catch (error) {
       alert("❌ Error: " + error);
     }
@@ -89,10 +106,12 @@
   async function loadLeads() {
     const querySnapshot = await getDocs(collection(db, "Leads"));
     const leadList = document.getElementById("leadList");
-    leadList.innerHTML = ""; // clear old cards
+    leadList.innerHTML = "";
 
-    querySnapshot.forEach((doc) => {
-      const lead = doc.data();
+    querySnapshot.forEach((docSnap) => {
+      const lead = docSnap.data();
+      const id = docSnap.id;
+
       leadList.innerHTML += `
         <div class="card mb-3 shadow">
           <div class="card-body">
@@ -103,11 +122,34 @@
               📅 ${lead.date}<br>
               📝 ${lead.notes || "No notes"}
             </p>
+            <div class="d-flex gap-2">
+              <button class="btn btn-warning btn-sm" onclick="editLead('${id}', '${lead.name}', '${lead.mobile}', '${lead.address}', '${lead.date}', '${lead.notes || ""}')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteLead('${id}')">Delete</button>
+            </div>
           </div>
         </div>
       `;
     });
   }
+
+  // Delete Lead
+  window.deleteLead = async (id) => {
+    if (confirm("Are you sure you want to delete this lead?")) {
+      await deleteDoc(doc(db, "Leads", id));
+      alert("🗑️ Lead Deleted Successfully!");
+      loadLeads();
+    }
+  };
+
+  // Edit Lead
+  window.editLead = (id, name, mobile, address, date, notes) => {
+    document.getElementById("name").value = name;
+    document.getElementById("mobile").value = mobile;
+    document.getElementById("address").value = address;
+    document.getElementById("date").value = date;
+    document.getElementById("notes").value = notes;
+    document.getElementById("leadForm").setAttribute("data-edit-id", id);
+  };
 
   // Load leads on page load
   loadLeads();
