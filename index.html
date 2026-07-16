@@ -117,7 +117,7 @@
           <div class="card-body">
             <h5 class="card-title">${lead.name}</h5>
             <p class="card-text">
-              📱 ${lead.mobile}<br>
+              📱 <a href="tel:${lead.mobile}"> ${lead.mobile}</a><br>
               🏠 ${lead.address}<br>
               📅 ${lead.date}<br>
               📝 ${lead.notes || "No notes"}
