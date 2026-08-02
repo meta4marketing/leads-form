@@ -110,7 +110,7 @@
     querySnapshot.forEach((docSnap) => {
       const lead = docSnap.data();
       const id = docSnap.id;
-      leadList.innerHTML += `
+leadList.innerHTML += `
 <div class="col-12 col-md-6 col-lg-4 col-xl-3">
     <div class="card shadow h-100">
         <div class="card-body">
@@ -124,8 +124,15 @@
             </p>
 
             <div class="d-flex gap-2">
-                <button class="btn btn-warning btn-sm">Edit</button>
-                <button class="btn btn-danger btn-sm">Delete</button>
+                <button class="btn btn-warning btn-sm"
+                    onclick="editLead('${id}', '${lead.name}', '${lead.mobile}', '${lead.address}', '${lead.date}', '${lead.notes || ""}')">
+                    Edit
+                </button>
+
+                <button class="btn btn-danger btn-sm"
+                    onclick="deleteLead('${id}')">
+                    Delete
+                </button>
             </div>
 
         </div>
