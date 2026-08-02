@@ -111,12 +111,12 @@
       const lead = docSnap.data();
       const id = docSnap.id;
       leadList.innerHTML += `
-<div class="col-12 col-md-6 col-xl-3">
+<div class="col-12 col-md-6 col-lg-4 col-xl-3">
     <div class="card shadow h-100">
         <div class="card-body">
-            <h5>${lead.name}</h5>
+            <h5 class="card-title">${lead.name}</h5>
 
-            <p>
+            <p class="card-text">
                 📱 ${lead.mobile}<br>
                 🏠 ${lead.address}<br>
                 📅 ${lead.date}<br>
