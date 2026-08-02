@@ -141,7 +141,9 @@ async function loadLeads() {
                 Delete
               </button>
             </div>
-<select class="form-select form-select-sm"
+
+          </div>
+          <select class="form-select form-select-sm"
         style="width:170px"
         onchange="updateStatus('${id}', this.value)">
     <option value="None" ${lead.status=="None"?"selected":""}>None</option>
@@ -150,7 +152,6 @@ async function loadLeads() {
     <option value="Proposal Sent" ${lead.status=="Proposal Sent"?"selected":""}>Proposal Sent</option>
     <option value="Call Attempted" ${lead.status=="Call Attempted"?"selected":""}>Call Attempted</option>
 </select>
-          </div>
         </div>
       </div>
     `;
